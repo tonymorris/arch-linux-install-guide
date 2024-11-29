@@ -101,7 +101,7 @@ $ <b>ping 1.1.1.1</b>
 </pre>
 </dd></dl>
 
-2. Syncronize pacman packaes:
+2. Synchronize pacman packages:
 
 <dl><dd>
 <pre>
@@ -115,7 +115,7 @@ $ <b>pacman -Syy</b>
 
 <dl><dd>
 <pre>
-$ <b>fdisk /dev/nvme0n1</b>
+$ <b>fdisk /dev/sda</b>
                 <i>[repeat this command until existing partitions are deleted]</i>
 Command (m for help): <b>d</b>
 Command (m for help): <b>d</b>
@@ -142,13 +142,13 @@ Last sector ...: <b>Enter &crarr;</b>
                 <i>[change partition types]</i>
 Command (m for help): <b>t</b>
 Partition number (1-3, default 1): <b>1</b>
-Partion typr or alias (type L to list all): <b>uefi</b>
+Partion type or alias (type L to list all): <b>uefi</b>
 Command (m for help): <b>t</b>
 Partition number (1-3, default 2): <b>2</b>
-Partion typr or alias (type L to list all): <b>linux</b>
+Partion type or alias (type L to list all): <b>linux</b>
 Command (m for help): <b>t</b>
 Partition number (1-3, default 3): <b>3</b>
-Partion typr or alias (type L to list all): <b>swap</b>
+Partion type or alias (type L to list all): <b>swap</b>
 <span />
                 <i>[write partitioning to disk]</i>
 Command (m for help): <b>w</b>
@@ -159,9 +159,9 @@ Command (m for help): <b>w</b>
 
 <dl><dd>
 <pre>
-$ <b>mkfs.fat -F 32 /dev/nvme0n1p1</b> <i># on EFI System partition</i>
-$ <b>mkfs -t ext4 /dev/nvme0n1p2</b>   <i># on Linux filesystem partition</i>
-$ <b>mkswap /dev/nvme0n1p3</b>         <i># on Linux swap partition</i>
+$ <b>mkfs.fat -F 32 /dev/sdap1</b> <i># on EFI System partition</i>
+$ <b>mkfs -t ext4 /dev/sdap2</b>   <i># on Linux filesystem partition</i>
+$ <b>mkswap /dev/sdap3</b>         <i># on Linux swap partition</i>
 </pre>
 </dd></dl>
 
@@ -169,10 +169,10 @@ $ <b>mkswap /dev/nvme0n1p3</b>         <i># on Linux swap partition</i>
 
 <dl><dd>
 <pre>
-$ <b>mount /dev/nvme0n1p2 /mnt</b>
+$ <b>mount /dev/sdap2 /mnt</b>
 $ <b>mkdir -p /mnt/boot/efi</b>
-$ <b>mount /dev/nvme0n1p1 /mnt/boot/efi</b>
-$ <b>swapon /dev/nvme0n1p3</b>
+$ <b>mount /dev/sdap1 /mnt/boot/efi</b>
+$ <b>swapon /dev/sdap3</b>
 </pre>
 </dd></dl>
 
@@ -199,10 +199,10 @@ $ <b>arch-chroot /mnt</b>
 
 <dl><dd>
 <pre>
-$ <b>vim /etc/locale.gen</b>   <i># uncomment your locales, i.e. `en_US.UTF-8` or `en_GB.UTF-8`</i>
+$ <b>vim /etc/locale.gen</b>   <i># uncomment your locales, i.e. `en_US.UTF-8` or `en_AU.UTF-8`</i>
 $ <b>locale-gen</b>
-$ <b>echo "LANG=en_US.UTF-8" > /etc/locale.conf</b>                <i># choose your locale</i>
-$ <b>ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime</b>   <i># choose your timezone</i>
+$ <b>echo "LANG=en_AU.UTF-8" > /etc/locale.conf</b>                <i># choose your locale</i>
+$ <b>ln -sf /usr/share/zoneinfo/Australia/Brisbane /etc/localtime</b>   <i># choose your timezone</i>
 $ <b>hwclock --systohc</b>
 </pre>
 </dd></dl>
@@ -235,7 +235,7 @@ $ <b>passwd <i>yourusername</i></b>
 <pre>
 $ <b>visudo</b>
     <i>[uncomment following line in file]</i>
-    <i>%wheel ALL=(ALL) ALL</i>
+    <i>%wheel ALL=(ALL:ALL) ALL</i>
 </pre>
 </dd></dl>
 
@@ -244,7 +244,7 @@ $ <b>visudo</b>
 <dl><dd>
 <pre>
 $ <b>pacman -S grub efibootmgr</b>
-$ <b>grub-install /dev/nvme0n1</b>
+$ <b>grub-install /dev/sda</b>
 $ <b>grub-mkconfig -o /boot/grub/grub.cfg</b>
 </pre>
 </dd></dl>
@@ -285,7 +285,15 @@ $ <b>timedatectl set-ntp true</b>
 </pre>
 </dd></dl>
 
-2. [Optional] Connect to WiFi using `nmcli`:
+2. Install git:
+
+<dl><dd>
+<pre>
+$ <b>sudo pacman -S git</b>
+</pre>
+</dd></dl>
+
+3. [Optional] Connect to WiFi using `nmcli`:
 
 <dl><dd>
 <pre>
@@ -293,7 +301,7 @@ $ <b>nmcli device wifi connect &lt;Name of WiFi access point&gt; password &lt;pa
 </pre>
 </dd></dl>
 
-3. Install X.Org and its utilities:
+4. Install X.Org and its utilities:
 
 <dl><dd>
 <pre>
@@ -301,7 +309,7 @@ $ <b>sudo pacman -S xorg xorg-apps xorg-xinit xorg-xlsfonts xdotool xclip xsel</
 </pre>
 </dd></dl>
 
-4. Install a bunch of useful utilities:
+5. Install a bunch of useful utilities:
 
 <dl><dd>
 <pre>
@@ -340,7 +348,7 @@ $ <b>sudo pacman -S bind</b>              <i># I use dig utility for DNS resolut
 </pre>
 </dd></dl>
 
-5. Install Xfce4, i3, or both:
+6. Install Xfce4, i3, or both:
 
 <dl><dd>
 <pre>
@@ -375,7 +383,7 @@ $ <b>sudo pacman -S gsimplecal</b>   <i># small calendar widget</i>
 </pre>
 </dd></dl>
 
-6. Install login session manager, I prefer `ly` for it's minimalism:
+7. Install login session manager, I prefer `ly` for it's minimalism:
 
 <dl><dd>
 <pre>
@@ -384,7 +392,7 @@ $ <b>sudo systemctl enable ly</b>
 </pre>
 </dd></dl>
 
-7. Install essential system fonts:
+8. Install essential system fonts:
 
 <dl><dd>
 <pre>
@@ -393,7 +401,7 @@ $ <b>sudo pacman -S noto-fonts noto-fonts-emoji ttf-ubuntu-font-family ttf-robot
 </pre>
 </dd></dl>
 
-8. [Optional] Enable sound support on your PC:
+9. [Optional] Enable sound support on your PC:
 
 <dl><dd>
 <pre>
@@ -405,7 +413,7 @@ $ <b>sudo pacman -S alsa-plugins</b>    # Additional ALSA plugins
 </pre>
 </dd></dl>
 
-9. [Optional] Enable bluetooth support on your PC:
+10. [Optional] Enable bluetooth support on your PC:
 
 <dl><dd>
 <pre>
@@ -414,7 +422,7 @@ $ <b>sudo systemctl enable bluetooth</b>
 </pre>
 </dd></dl>
 
-10. [Optional] Enable printing support on your PC:
+11. [Optional] Enable printing support on your PC:
 
 <dl><dd>
 <pre>
@@ -429,7 +437,7 @@ go to <code>/usr/share/applications/system-config-printer.desktop</code> and set
 <code>Categories=System;Settings;X-XFCE-SettingsDialog;X-XFCE-HardwareSettings;</code>
 </dd></dl>
 
-11. [Optional] Improve battary usage with TLP - utility that basically does kernel settings
+12. [Optional] Improve battary usage with TLP - utility that basically does kernel settings
     tweaking that improve power consumption. More information about TLP
     [can be found here](https://linrunner.de/tlp/). More information about TLP-RDW (radio device wizard)
     [can be found here](https://linrunner.de/tlp/settings/rdw.html).
@@ -447,7 +455,7 @@ $ <b>sudo systemctl mask systemd-rfkill.socket</b>
 </pre>
 </dd></dl>
 
-12. [Optional] Run service that will discard unused blocks on mounted filesystems. This is useful for
+13. [Optional] Run service that will discard unused blocks on mounted filesystems. This is useful for
     solid-state drives (SSDs) and thinly-provisioned storage. More information on fstrim
     [can be found here](https://man7.org/linux/man-pages/man8/fstrim.8.html).
 
@@ -457,7 +465,7 @@ $ <b>sudo systemctl enable fstrim.timer</b>
 </pre>
 </dd></dl>
 
-13. [Optional] Install GTK themes and icons:
+14. [Optional] Install GTK themes and icons:
 
 <dl><dd>
 <pre>
@@ -466,7 +474,7 @@ $ <b>sudo pacman -S papirus-icon-theme</b>
 </pre>
 </dd></dl>
 
-14. [Optional] Choose fastest pacman mirrors (use your own country list):
+15. [Optional] Choose fastest pacman mirrors (use your own country list):
 
 <dl><dd>
 <pre>
@@ -477,7 +485,7 @@ $ <b>sudo reflector --country Germany,Austria,Switzerland \
 </pre>
 </dd></dl>
 
-15. [Optional] Install NetworkManager addons:
+16. [Optional] Install NetworkManager addons:
 
 <dl><dd>
 <pre>
@@ -485,7 +493,7 @@ $ <b>sudo pacman -S nm-connection-editor networkmanager-openvpn</b>
 </pre>
 </dd></dl>
 
-16. [Optional] Install vulkan drivers:
+17. [Optional] Install vulkan drivers:
 
 <dl><dd>
 <pre>
@@ -495,7 +503,7 @@ $ <b>pacman -S amdvlk</b>         <i># only for systems with AMD graphics</i>
 </pre>
 </dd></dl>
 
-17. Reboot to finalize installation:
+18. Reboot to finalize installation:
 
 <dl><dd>
 <pre>
